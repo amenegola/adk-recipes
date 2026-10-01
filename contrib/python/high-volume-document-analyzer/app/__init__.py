@@ -12,26 +12,27 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# high_volume_document_analyzer/agent.py
-
 """High-Volume Document Analyzer Agent: query and synthesize information from documents."""
 
 import os
 
+import google.auth
 from dotenv import load_dotenv
-from google.adk.agents import LlmAgent
 
-from high_volume_document_analyzer.prompt import ROOT_AGENT_INSTRUCTION
-from high_volume_document_analyzer.tools.document_toolset import (
-    analyze_document_next_chunk,
-)
-
+# Load variables from .env if present. In production the environment is
+# already populated by the platform (Cloud Run, GKE, etc.), so a missing
+# .env is expected and not an error.
 load_dotenv()
 
-root_agent = LlmAgent(
-    name="document_analyzer_agent",
-    description="Agent that analyzes document collections in chunks to answer user questions.",
-    model=os.getenv("MODEL_NAME_AGENT", "gemini-2.5-flash"),
-    instruction=ROOT_AGENT_INSTRUCTION,
-    tools=[analyze_document_next_chunk],
-)
+try:
+    _, project_id = google.auth.default()
+except Exception:
+    project_id = os.environ.get("GOOGLE_CLOUD_PROJECT")
+
+if project_id and "GOOGLE_CLOUD_PROJECT" not in os.environ:
+    os.environ["GOOGLE_CLOUD_PROJECT"] = project_id
+
+os.environ.setdefault("GOOGLE_CLOUD_LOCATION", "global")
+os.environ.setdefault("GOOGLE_GENAI_USE_VERTEXAI", "True")
+
+from . import agent  # noqa: E402 -- must come after load_dotenv()

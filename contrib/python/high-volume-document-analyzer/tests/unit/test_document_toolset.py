@@ -19,7 +19,7 @@ from unittest.mock import AsyncMock, MagicMock, patch
 import pytest
 from google.adk.tools import ToolContext
 
-from high_volume_document_analyzer.tools.document_toolset import (
+from app.tools.document_toolset import (
     analyze_document_next_chunk,
 )
 
@@ -42,7 +42,7 @@ async def test_analyze_document_reset_search(mock_tool_context):
 
     # Patch fetch to return empty list so it aborts early
     with patch(
-        "high_volume_document_analyzer.tools.document_toolset.fetch_document_urls_async",
+        "app.tools.document_toolset.fetch_document_urls_async",
         new_callable=AsyncMock,
     ) as mock_fetch:
         mock_fetch.return_value = []

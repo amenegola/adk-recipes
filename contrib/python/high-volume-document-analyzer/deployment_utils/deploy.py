@@ -20,9 +20,9 @@ import vertexai
 from dotenv import load_dotenv
 from vertexai import agent_engines
 
-# Add the project root to sys.path to allow importing high_volume_document_analyzer
+# Add the project root to sys.path to allow importing app
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-from high_volume_document_analyzer.agent import root_agent
+from app.agent import root_agent
 
 load_dotenv(override=True)
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
@@ -56,12 +56,12 @@ else:
 common_args = {
     "agent_engine": adk_app,
     "extra_packages": [
-        "high_volume_document_analyzer/__init__.py",
-        "high_volume_document_analyzer/agent.py",
-        "high_volume_document_analyzer/prompt.py",
-        "high_volume_document_analyzer/tools/__init__.py",
-        "high_volume_document_analyzer/tools/document_toolset.py",
-        "high_volume_document_analyzer/tools/process_toolset.py",
+        "app/__init__.py",
+        "app/agent.py",
+        "app/prompt.py",
+        "app/tools/__init__.py",
+        "app/tools/document_toolset.py",
+        "app/tools/process_toolset.py",
     ],
     "requirements": [
         "google-adk>=1.28.0",
