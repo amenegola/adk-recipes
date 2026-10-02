@@ -29,7 +29,7 @@ logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
 )
 
-CHUNK_SIZE = int(os.getenv("BATCH_SIZE"))
+CHUNK_SIZE = int(os.environ["BATCH_SIZE"])
 MODEL_NAME = os.getenv("MODEL_NAME_DOC_PROCESSING")
 LOCATION = os.getenv("GOOGLE_CLOUD_LOCATION")
 

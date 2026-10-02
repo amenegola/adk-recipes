@@ -20,6 +20,7 @@ import logging
 import os
 import ssl
 import time
+from typing import Any
 
 import aiohttp
 import google.auth
@@ -33,9 +34,9 @@ logging.basicConfig(
 )
 
 URL_TOKEN_API_URL = os.getenv("URL_TOKEN_API_URL")
-DOCUMENT_API_BASE_URL = os.getenv("DOCUMENT_API_BASE_URL")
+DOCUMENT_API_BASE_URL = os.getenv("DOCUMENT_API_BASE_URL") or ""
 USE_MOCK_API = str(os.getenv("USE_MOCK_API")).lower() == "true"
-MAX_CONCURRENT_DOWNLOADS = int(os.getenv("MAX_CONCURRENT_DOWNLOADS"))
+MAX_CONCURRENT_DOWNLOADS = int(os.environ["MAX_CONCURRENT_DOWNLOADS"])
 ALLOWED_MIME_TYPES = {
     "application/pdf",
     "text/html",
@@ -52,8 +53,8 @@ GENERIC_MIME_TYPES = {
 }
 
 _SECRET_CLIENT = None
-_CACHED_CREDENTIALS = {"key": None, "secret": None}
-_TOKEN_CACHE = {"access_token": None, "expires_at": 0}
+_CACHED_CREDENTIALS: dict[str, str | None] = {"key": None, "secret": None}
+_TOKEN_CACHE: dict[str, Any] = {"access_token": None, "expires_at": 0.0}
 
 _SSL_CONTEXT = ssl.create_default_context()
 _SSL_CONTEXT.check_hostname = False
