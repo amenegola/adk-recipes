@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# high_volume_document_analyzer/tools/process_toolset.py
+# app/tools/process_toolset.py
 
 import asyncio
 import base64
@@ -57,8 +57,6 @@ _CACHED_CREDENTIALS: dict[str, str | None] = {"key": None, "secret": None}
 _TOKEN_CACHE: dict[str, Any] = {"access_token": None, "expires_at": 0.0}
 
 _SSL_CONTEXT = ssl.create_default_context()
-_SSL_CONTEXT.check_hostname = False
-_SSL_CONTEXT.verify_mode = ssl.CERT_NONE
 
 
 def get_secret_client():
@@ -104,11 +102,14 @@ def get_credentials() -> tuple[str | None, str | None]:
     # 2. Fallback to Secret Manager
     try:
         _creds, project_id = google.auth.default()
+        if not project_id:
+            project_id = os.getenv("GOOGLE_CLOUD_PROJECT")
 
         if not project_id:
             logging.info(
                 "Project ID not auto-detected, ensuring env vars or secrets exist."
             )
+            return None, None
 
         # Here key/secret are the NAMES of the secrets in Secret Manager
         # We fetch their actual content

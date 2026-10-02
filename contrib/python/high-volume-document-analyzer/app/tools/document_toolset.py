@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# high_volume_document_analyzer/tools/document_toolset.py
+# app/tools/document_toolset.py
 
 import logging
 import os

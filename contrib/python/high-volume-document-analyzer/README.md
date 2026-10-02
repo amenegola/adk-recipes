@@ -34,7 +34,7 @@ An AI-powered agent built with the [Google Agent Development Kit (ADK)](https://
 
 **Agent:** Let me check that for you. I'm fetching the documents for collection 12345 now.
 
-*(Agent invokes `analyze_document_batch_next_chunk` tool... reads docs #25 to #15)*
+*(Agent invokes `analyze_document_next_chunk` tool... reads docs #25 to #15)*
 
 **Agent:** Here is the summary of the first batch of recent documents analyzed: 
 - Document #25 indicates the contract was approved by the legal department.
@@ -43,7 +43,7 @@ Would you like me to continue reading the older documents?
 
 **User:** No, that's what I needed. But who is the client assigned to this case?
 
-*(Agent invokes `analyze_document_batch_next_chunk` with `reset_search=True`...)*
+*(Agent invokes `analyze_document_next_chunk` with `reset_search=True`...)*
 
 **Agent:** Based on the contract header in Document #25, the assigned client is "Acme Corp".
 
@@ -102,7 +102,7 @@ GOOGLE_CLOUD_LOCATION=us-central1
 Depending on your deployment, you may also need to configure the following variables in your `.env` file:
 * **`USE_MOCK_API`**: Kept as `"True"` for local testing without authentication, or `"False"` to enable the production backend pipeline.
 * **`DOCUMENT_API_BASE_URL`**: The domain endpoint for your organization's document fetching API.
-* **`CLIENT_ID` & `CLIENT_SECRET`**: If using the production pipeline, set these to the short names of your Google Secret Manager secrets (e.g., `my-client-id-secret`). The code automatically builds the full resource path for your project.
+* **`CLIENT_ID` & `CLIENT_SECRET`**: If using the production pipeline, set these to the short names of your Google Secret Manager secrets prefixed with `prod-` (e.g., `prod-client-id` and `prod-client-secret`). The code automatically builds the full resource path for your project.
 * **`BATCH_SIZE` & `MAX_CONCURRENT_DOWNLOADS`**: Fine-tuning parameters for document ingestion (defaults: 10 and 20).
 
 4.  **Google Cloud Setup:**
@@ -275,12 +275,12 @@ The project includes a dedicated deployment script that automates the creation a
 1. **Configure Environment**: Ensure your `.env` file has the `STAGING_BUCKET` defined (e.g., `gs://your-bucket-name`).
 2. **Run the Deployment Script**:
    ```bash
-   uv run python deploy/deploy_agent.py
+   uv run python deployment_utils/deploy.py
    ```
 
 > **💡 Pro Tip:** The script creates a `.agent_engine_resource.json` file to track your deployment. Subsequent runs will automatically **update** the existing agent instead of creating a new one.
 
-For more details on the deployment process, see the [Deploy Guide](deploy/README.md).
+For more details on the deployment process, see [`deployment_utils/deploy.py`](deployment_utils/deploy.py).
 
 The service account running the agent must have access to **Secret Manager** if you are using it for production credentials:
 

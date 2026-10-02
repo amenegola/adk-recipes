@@ -21,11 +21,14 @@ WORKDIR /code
 # Copy dependency files first for better caching
 COPY ./pyproject.toml ./README.md ./uv.lock* ./
 
+# Install Python dependencies
+RUN uv sync --frozen --no-install-project
+
 # Copy application code
 COPY ./app ./app
 COPY .env.example ./
 
-# Install Python dependencies
+# Install local package
 RUN uv sync --frozen
 
 RUN useradd --create-home --uid 1000 appuser && \
