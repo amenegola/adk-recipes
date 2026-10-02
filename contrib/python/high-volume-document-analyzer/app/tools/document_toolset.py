@@ -29,9 +29,9 @@ logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
 )
 
-CHUNK_SIZE = int(os.getenv("BATCH_SIZE", "10"))
-MODEL_NAME = os.getenv("MODEL_NAME_DOC_PROCESSING", "gemini-3.5-flash")
-LOCATION = os.getenv("GOOGLE_CLOUD_LOCATION", "us-central1")
+CHUNK_SIZE = int(os.getenv("BATCH_SIZE"))
+MODEL_NAME = os.getenv("MODEL_NAME_DOC_PROCESSING")
+LOCATION = os.getenv("GOOGLE_CLOUD_LOCATION")
 
 _MODEL_INSTANCE: GenerativeModel | None = None
 
@@ -192,7 +192,9 @@ async def analyze_document_next_chunk(
                     prompt_parts.append(str(file_data["data"]))
                 valid_docs_count += 1
             except Exception as e:
-                logging.warning(f"Failed to process document data: {e}")
+                logging.warning(
+                    f"Failed to process {label} ({type(e).__name__})."
+                )
 
         tool_context.state[state_idx_key] = end_idx
 

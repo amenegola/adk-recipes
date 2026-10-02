@@ -34,8 +34,8 @@ logging.basicConfig(
 
 URL_TOKEN_API_URL = os.getenv("URL_TOKEN_API_URL")
 DOCUMENT_API_BASE_URL = os.getenv("DOCUMENT_API_BASE_URL")
-USE_MOCK_API = os.getenv("USE_MOCK_API", "True").lower() == "true"
-MAX_CONCURRENT_DOWNLOADS = int(os.getenv("MAX_CONCURRENT_DOWNLOADS", "20"))
+USE_MOCK_API = str(os.getenv("USE_MOCK_API")).lower() == "true"
+MAX_CONCURRENT_DOWNLOADS = int(os.getenv("MAX_CONCURRENT_DOWNLOADS"))
 ALLOWED_MIME_TYPES = {
     "application/pdf",
     "text/html",

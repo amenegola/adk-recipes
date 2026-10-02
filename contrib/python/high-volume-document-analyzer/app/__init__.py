@@ -15,24 +15,24 @@
 """High-Volume Document Analyzer Agent: query and synthesize information from documents."""
 
 import os
+from pathlib import Path
 
 import google.auth
 from dotenv import load_dotenv
 
-# Load variables from .env if present. In production the environment is
-# already populated by the platform (Cloud Run, GKE, etc.), so a missing
-# .env is expected and not an error.
+# Load variables from .env if present, falling back to .env.example for defaults.
 load_dotenv()
+load_dotenv(Path(__file__).resolve().parent.parent / ".env.example")
 
 try:
     _, project_id = google.auth.default()
 except Exception:
     project_id = os.environ.get("GOOGLE_CLOUD_PROJECT")
 
-if project_id and "GOOGLE_CLOUD_PROJECT" not in os.environ:
+if project_id and (
+    "GOOGLE_CLOUD_PROJECT" not in os.environ
+    or os.environ["GOOGLE_CLOUD_PROJECT"].startswith("<TODO")
+):
     os.environ["GOOGLE_CLOUD_PROJECT"] = project_id
-
-os.environ.setdefault("GOOGLE_CLOUD_LOCATION", "global")
-os.environ.setdefault("GOOGLE_GENAI_USE_VERTEXAI", "True")
 
 from . import agent  # noqa: E402 -- must come after load_dotenv()

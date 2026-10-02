@@ -23,8 +23,7 @@ COPY ./pyproject.toml ./README.md ./uv.lock* ./
 
 # Copy application code
 COPY ./app ./app
-COPY .env.example* .env* ./
-RUN if [ ! -f .env ] && [ -f .env.example ]; then cp .env.example .env; fi
+COPY .env.example ./
 
 # Install Python dependencies
 RUN uv sync --frozen
